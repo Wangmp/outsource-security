@@ -1,0 +1,77 @@
+*{
+	margin:0;
+	padding: 0;
+}
+/************play***********/
+body{
+	width: 1000px;
+	margin: 40px auto;
+}
+.headcon{
+	width: 100%;
+	height: 160px;
+}
+.headcon>.fl{
+	width: 50%;
+	float: left;
+	text-align: center;
+}
+.rolename{
+	font-size: 30px;
+}
+.rolenum{
+	font-size: 50px;
+	line-height: 80px;
+	color: #f75f5f;
+}
+.table{
+	width: 100%;
+	border-collapse: collapse;
+	border: 1px #87878f solid;
+}
+tr>td{
+	border: 1px solid #999;
+	padding: 10px;
+}
+.setting{
+	padding: 20px;
+	background: #6690ef;
+	color: #fff;
+	height: 80px;
+}
+.setting>.fl{
+	float: left;
+}
+.setting button {
+	padding: 7px 20px;
+	background: #fff;
+	color: #000;
+	border: 2px solid #0a3bad;
+	float: right;
+	margin-left: 30px;
+}
+.search{
+	width: 100%;
+	height: 60px;
+	margin-top: 20px;
+}
+.search>.fl{
+	float: left;
+	width: 25%;
+}
+input, select{
+	border: 1px solid #999;
+	padding: 10px;
+	width: 60%;
+}
+.search button{
+	padding: 10px 20px;
+	background: #5f8ef7;
+	color:#fff;
+	border: 0;
+	float: right;
+}
+.wid100{
+	width: 100px !important;
+	margin:0 5px;
+}

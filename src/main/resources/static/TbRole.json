@@ -1,0 +1,16 @@
+[
+  {
+    "roleType": 1,
+    "roleName": "C罗",
+    "delFlag": 0,
+    "createBy": "wmp",
+    "updateBy": "wmp"
+  },
+  {
+    "roleType": 1,
+    "roleName": "梅西",
+    "delFlag": 0,
+    "createBy": "wmp",
+    "updateBy": "wmp"
+  }
+]

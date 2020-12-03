@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout= "http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+	<meta charset="utf-8">
+	<meta name="Keywords" content="" >
+	<meta name="description" content="" />
+    <link rel="stylesheet" type="text/css" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/layer/theme/default/layer.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+	<script src="/js/jquery-3.3.1.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/js/jqPaginator.js"></script>
+	<script src="/layer/layer.js"></script>
+	<title>足球后台管理</title>
+
+	<script>
+
+		$(function(){
+			selectData(1);
+		});
+
+		//查询接口
+		function selectData(num){
+			var userName = $("#userName").val();
+			var mobile = $("#mobile").val();
+			var isWin = $("#isWin").val();
+			$.ajax({
+				url: "/score/selectData",
+				data: {userName: userName,mobile:mobile,isWin:isWin,page:num-1},
+				type: "POST",
+				dataType: "json",
+				success: function(data) {
+					if(data.code==200){
+						if(data.data.list.length!=0){
+							$("#selecttbody").empty();
+							var returndata = data.data.list; //数据
+							var totals = data.data.total;
+							//渲染数据
+							show_data(returndata);
+							//加载分页
+							display_pages(totals,num);
+							$("#pagination1").show();
+						}else{
+							$("#selecttbody").empty();
+							var tbodystr = '<tr>';
+							tbodystr='<td colspan="7" style="color: grey;">未找到相关数据</td>';
+							tbodystr+='</tr>';
+							$("#selecttbody").append(tbodystr);
+							$("#pagination1").hide();
+						}
+					}
+				}
+			});
+		}
+
+		function show_data(returndata){
+			var tbodystr = '';
+			//渲染数据
+			$.each(returndata,function(index,value){
+				tbodystr += '<tr>';
+				tbodystr += '<td>'+value.id+'</td>';
+				tbodystr += '<td>'+value.mobile+'</td>';
+				tbodystr += '<td>'+value.roleName+'</td>';
+				tbodystr += '<td>'+value.userName+'</td>';
+				tbodystr += '<td>'+value.score+'</td>';
+				tbodystr += '<td>'+value.isWinStr+'</td>';
+				tbodystr += '<td>'+value.playDate+'</td>';
+				tbodystr += '</tr>';
+			})
+			$("#selecttbody").append(tbodystr);
+		}
+
+		function display_pages(total_pages,current_page){
+
+			if(!current_page){
+				current_page = 1;
+			}
+
+			$('#pagination1').jqPaginator({
+				totalCounts: total_pages,
+				pageSize: 10,  //每页显示的数据量
+				currentPage: current_page,
+				first: '<li class="first"><a href="javascript:void(0);">首页</a></li>',
+				prev: '<li class="prev"><a href="javascript:void(0);">上一页</a></li>',
+				next: '<li class="next"><a href="javascript:void(0);">下一页</a></li>',
+				last: '<li class="last"><a href="javascript:void(0);">末页</a></li>',
+				page: '<li class="page"><a href="javascript:void(0);">{{page}}</a></li>',
+				onPageChange: function (num,type) {
+					if(type=='change'){
+						selectData(num);
+					}
+				}
+			});
+		}
+
+
+
+		//保存中奖基数
+		function saveWinRate() {
+			var winRate = $("#winRate").val();
+			if(winRate<=0){
+				layer.alert('值必须大于0', {
+					title:"提示信息",
+					icon: 2,
+					skin: 'layer-ext-moon'
+				})
+			}else{
+				$.ajax({
+					url: "/win/add",
+					data: {winRate: winRate},
+					type: "POST",
+					dataType: "json",
+					success: function(data) {
+						if(data.code == 0){
+							layer.alert('保存成功', {
+								title:"提示信息",
+								icon: 1,
+								skin: 'layer-ext-moon'
+							})
+						}
+					}
+				});
+			}
+		}
+
+	</script>
+
+</head>
+<body style="text-align: center">
+	<div class="headcon">
+		<div class="fl">
+			<p class="rolename">c罗</p>
+			<p class="rolenum" th:text="${countDate.cluoScore}"></p>
+		</div>
+		<div class="fl">
+			<p class="rolename">梅西</p>
+			<p class="rolenum" th:text="${countDate.meixiScore}"></p>
+		</div>
+	</div>
+	<div class="setting">
+		<div class="fl">设置编号为<input style="color:black !important" type="number" id="winRate" th:value="${winRate}" class="wid100"/>的倍数记录中奖</div>
+		<div class="fl"><button onclick="saveWinRate()">确 定</button></div>
+	</div>
+	<div class="search">
+		<div class="fl">手机号：<input id="mobile"  type="text" value="" width="100px"/></div>
+		<div class="fl">姓名：<input  id="userName" type="text" value="" width="100px"/></div>
+		<div class="fl">是否中奖：
+			<select id="isWin">
+				<option selected value="">全部</option>
+				<option value="1">是</option>
+				<option value="0">否</option>
+			</select>
+		</div>
+		<div class="fl"><button onclick="selectData(1)">确 定</button></div>
+	</div>
+	<table class="table">
+		<thead>
+		   <tr>
+			   <td width="50px">编号</td>
+			   <td width="200px">手机号</td>
+			   <td>角色</td>
+			   <td>姓名</td>
+			   <td>获得分值(分)</td>
+			   <td>是否中奖</td>
+			   <td>踢球日期</td>
+		   </tr>
+		</thead>
+		<tbody id="selecttbody">
+<!--			<tr th:each="score:${scoreDate.data.list}">-->
+<!--				<td th:text="${score.id}"></td>-->
+<!--				<td th:text="${score.mobile}"></td>-->
+<!--				<td th:text="${score.roleName}"></td>-->
+<!--				<td th:text="${score.userName}"></td>-->
+<!--				<td th:text="${score.score}"></td>-->
+<!--				<td th:text="${score.isWinStr}"></td>-->
+<!--				<td th:text="${score.playDate}"></td>-->
+<!--			</tr>-->
+		</tbody>
+	</table>
+	<ul  class="pagination" id="pagination1"></ul>
+</body>
+</html>

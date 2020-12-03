@@ -1,0 +1,31 @@
+server:
+  port: ${PORT:8080}
+#  servlet:
+#    context-path: /api/one
+
+# 默认使用配置
+spring:
+  profiles:
+    active: ${JAVA_ENVIRONMENT:@profile.active@}
+  application:
+    name: outsource-security
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming_strategy: org.hibernate.cfg.ImprovedNamingStrategy
+      dialect: org.hibernate.dialect.SQLServer2008Dialect
+    show-sql: true
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true
+        dialect: com.wmp.cn.config.dbdialetc.DefaultMySQL57InnoDBDialect
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: utf-8
+    cache: false
+    mode: html5
